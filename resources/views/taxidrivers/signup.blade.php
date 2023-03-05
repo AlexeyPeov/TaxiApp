@@ -7,7 +7,7 @@
 </style>
 @section('content')
 
-    <form method="POST" action="/taxidriver/signup">
+    <form method="POST" action="/taxidriver/new">
         @csrf
         <div class="form-container" style="display: flex;">
             <fieldset>
@@ -15,27 +15,27 @@
                 <label for="firstName"> First Name </label><br>
                 <input type="text" name="firstName" value="{{old('firstName')}}"/>
                 @error('firstName')
-                <p>{{$message}}</p>
+                <p class="text-red-500 text-xs mt-1">{{$message}}</p>
                 @enderror
 
                 <label for="secondName"> Second Name </label><br>
                 <input type="text" name="secondName" value="{{old('secondName')}}"/>
                 @error('secondName')
-                <p>{{$message}}</p>
+                <p class="text-red-500 text-xs mt-1">{{$message}}</p>
                 @enderror
 
                 <label for="phoneNumber">Phone Number</label><br>
                 <input type="text" name="phoneNumber" value="{{old('phoneNumber')}}"/>
 
                 @error('phoneNumber')
-                <p>{{$message}}</p>
+                <p class="text-red-500 text-xs mt-1">{{$message}}</p>
                 @enderror
 
                 <label for="birthday">Day of Birth</label><br>
                 <input type="date" name="birthday" value="{{old('birthday')}}"/>
 
                 @error('birthday')
-                <p>{{$message}}</p>
+                <p class="text-red-500 text-xs mt-1">{{$message}}</p>
                 @enderror
             </fieldset>
 
@@ -44,27 +44,27 @@
                 <label for="brand">Brand</label><br>
                 <input type="text" name="brand" value="{{old('brand')}}"/>
                 @error('brand')
-                <p>{{$message}}</p>
+                <p class="text-red-500 text-xs mt-1">{{$message}}</p>
                 @enderror
 
                 <label for="plates">Plates</label><br>
                 <input type="text" name="plates" value="{{old('plates')}}"/>
                 @error('plates')
-                <p>{{$message}}</p>
+                <p class="text-red-500 text-xs mt-1">{{$message}}</p>
                 @enderror
 
                 <label for="color">Color</label><br>
                 <input type="text" name="color" value="{{old('color')}}"/>
 
                 @error('color')
-                <p>{{$message}}</p>
+                <p class="text-red-500 text-xs mt-1">{{$message}}</p>
                 @enderror
 
                 <label for="carClass">Car Class</label><br>
                 <input type="text" name="carClass" value="{{old('carClass')}}"/>
 
                 @error('carClass')
-                <p>{{$message}}</p>
+                <p class="text-red-500 text-xs mt-1">{{$message}}</p>
                 @enderror
             </fieldset>
         </div>
@@ -88,7 +88,7 @@
                    value="{{old('password_confirmation')}}"/>
 
             @error('password_confirmation')
-            <p>{{$message}}</p>
+            <p class="text-red-500 text-xs mt-1">{$message}}</p>
             @enderror
         </fieldset>
 

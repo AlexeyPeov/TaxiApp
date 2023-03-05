@@ -13,6 +13,13 @@ class Car extends Model
     const SECOND = 2;
     const THIRD = 3;
 
+    protected $fillable = [
+        'brand',
+        'plates',
+        'color',
+        'carClass',
+    ];
+
     public function getId(): int
     {
         return $this->id;

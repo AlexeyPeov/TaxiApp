@@ -34,11 +34,21 @@ Route::post('/order/submit', [OrderController::class, 'submit']);
 
 Route::get('/taxidriver', [TaxiDriverController::class, 'index']);
 
+Route::get('taxidriver/accounts/{id}', [TaxiDriverController::class, 'show'])->name('taxidriver.show')->middleware('auth');
+
 // Show Register/Create Form
-Route::get('/taxidriver/signup', [TaxiDriverController::class, 'create'])->middleware('guest');
+Route::get('/taxidriver/signup', [TaxiDriverController::class, 'create']);//->middleware('guest');
+
+// Show Login Form
+Route::get('/taxidriver/login', [TaxiDriverController::class, 'login']);//->name('login')->middleware('guest');
+
+// Create New User
+Route::post('/taxidriver/new', [TaxiDriverController::class, 'store']);
+
+// Log In User
+Route::post('/taxidriver/authenticate', [TaxiDriverController::class, 'authenticate']);
 
 /*
-
 // Create New User
 Route::get('/taxidriver', [TaxiDriverController::class, 'store']);
 

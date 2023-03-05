@@ -25,7 +25,7 @@ return new class extends Migration
             FOREIGN KEY (customerId) REFERENCES customer(id)*/
             $table->timestamps();
             $table->foreignId('customerId')->nullable()->constrained('customers')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('taxiDriverId')->nullable()->constrained('taxidrivers')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('taxiDriverId')->nullable()->constrained('taxi_drivers')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('taxidrivers', function (Blueprint $table) {
+        Schema::create('taxi_drivers', function (Blueprint $table) {
             $table->id();
+            $table->string('phoneNumber',12);
+            $table->string('password');
             $table->string('firstName',50);
             $table->string('secondName',50);
             $table->timestamp('birthday');
             $table->integer('experience')->nullable();
             $table->float('rating')->nullable();
-            $table->string('qualification', 20);
+            $table->string('qualification', 20)->nullable();
 //            $table->integer('carDriving')->nullable();
             $table->integer('reviewHeap')->nullable();
             $table->integer('reviewsGiven')->nullable();

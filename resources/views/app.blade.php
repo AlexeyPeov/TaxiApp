@@ -55,6 +55,17 @@
         .form-wrapper {
             margin: 0 20px;
         }
+        .text-red-500 {
+            color: #ff7f7f;
+        }
+
+        .text-xs {
+            font-size: 0.75rem;
+        }
+
+        .mt-1 {
+            margin-top: 0.25rem;
+        }
     </style>
 </head>
 <body>

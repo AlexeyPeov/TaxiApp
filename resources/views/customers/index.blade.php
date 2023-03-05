@@ -1,7 +1,7 @@
 @extends ('app')
 
 @section ('content')
-    <div class="center">
+    <div class="form-container" style="display: flex;">
         <form action="/order/submit" method="POST">
             @csrf
 

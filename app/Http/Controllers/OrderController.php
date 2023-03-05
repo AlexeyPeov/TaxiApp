@@ -61,6 +61,7 @@ class OrderController extends Controller
                 'phoneNumber' => $phone,
                 'orderCount' => 1,
                 'personalDiscount' => 0,
+                'orderDeclinedCount' => 0,
             ]);
         } else {
             $customer->updateOrderCount();

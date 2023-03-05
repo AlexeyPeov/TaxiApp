@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Car;
 use App\Models\TaxiDriver;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class TaxiDriverController extends Controller
 {
@@ -14,26 +17,74 @@ class TaxiDriverController extends Controller
     public function create() {
         return view('taxidrivers.signup');
     }
-   /*
+
+    // Show Login Form
+    public function login() {
+        return view('taxidrivers.login');
+    }
+
     // Create New User
     public function store(Request $request) {
-        $formFields = $request->validate([
-            'name' => ['required', 'min:3'],
+        $formFieldsTaxiDriver = $request->validate([
+            'firstName' => ['required', 'min:3'],
+            'secondName' => ['required', 'min:3'],
+            'birthday' => ['required', 'date', 'before:' . Carbon::now()->subYears(18)->toDateString()],
             'phoneNumber' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-            'password' => 'required|confirmed|min:6'
+            'password' => 'required|confirmed|min:6',
+
         ]);
+        $formFieldsCar = $request->validate([
+            'brand'=> ['required','string'],
+            'plates'=> ['required','string'],
+            'color'=> ['required','string'],
+            'carClass'=> ['required','integer','between:1,3'],
 
+        ]);
         // Hash Password
-        $formFields['password'] = bcrypt($formFields['password']);
+        $formFieldsTaxiDriver['password'] = bcrypt($formFieldsTaxiDriver['password']);
 
-        // Create User
-        $taxiDriver = TaxiDriver::create($formFields);
+        $car = Car::create($formFieldsCar);
+        $formFieldsTaxiDriver['carDriving'] = $car->id;
+        // Create TaxiDriver
+        $taxiDriver = TaxiDriver::create($formFieldsTaxiDriver);
 
         // Login
         auth()->login($taxiDriver);
-
-        return redirect('/taxidriver')->with('message', 'User created and logged in');
+        return redirect()->route('taxidriver.show', ['id' => $taxiDriver->id])
+            ->with('message', 'Your account has been created, you are logged in');
     }
+
+    public function show(int $id) {
+        if($id!= auth()->id()) {
+            abort(403, 'Unauthorized Action');
+        } else {
+            $taxiDriver = TaxiDriver::find(auth()->id())->getAttributes();
+            //dd($taxiDriver);
+            return view('taxidrivers.show', [
+                'taxiDriver' => $taxiDriver
+            ]);
+        }
+
+    }
+
+    // Authenticate TaxiDriver
+    public function authenticate(Request $request) {
+        $formFields = $request->validate([
+            'phoneNumber' => 'required',//|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'password' => 'required'
+        ]);
+        $taxiDriver = TaxiDriver::where('phoneNumber', $formFields['phoneNumber'])->first();
+        if(auth()->attempt($formFields)) {
+            $request->session()->regenerate();
+
+            return redirect()->route('taxidriver.show', ['id' => $taxiDriver->id])
+                ->with('message', 'Your account has been created, you are logged in');
+        }
+
+        return back()->withErrors(['phoneNumber' => 'Invalid Credentials'])->onlyInput('phoneNumber');
+    }
+   /*
+
 
     // Logout User
     public function logout(Request $request) {
@@ -46,24 +97,5 @@ class TaxiDriverController extends Controller
 
     }
 
-    // Show Login Form
-    public function login() {
-        return view('taxidrivers.login');
-    }
-
-    // Authenticate User
-    public function authenticate(Request $request) {
-        $formFields = $request->validate([
-            'phoneNumber' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-            'password' => 'required'
-        ]);
-
-        if(auth()->attempt($formFields)) {
-            $request->session()->regenerate();
-
-            return redirect('/taxidriver')->with('message', 'You are now logged in!');
-        }
-
-        return back()->withErrors(['phoneNumber' => 'Invalid Credentials'])->onlyInput('phoneNumber');
-    }*/
+   */
 }
