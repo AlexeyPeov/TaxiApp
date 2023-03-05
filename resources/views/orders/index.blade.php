@@ -2,7 +2,6 @@
 
 @section('content')
 
-
         @unless($customer == null)
 
             @foreach($orders as $order)

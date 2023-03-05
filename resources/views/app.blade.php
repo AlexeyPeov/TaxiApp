@@ -47,6 +47,14 @@
             border: 1px solid black;
             border-radius: 10px;
         }
+        .form-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .form-wrapper {
+            margin: 0 20px;
+        }
     </style>
 </head>
 <body>
