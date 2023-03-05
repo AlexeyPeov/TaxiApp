@@ -15,21 +15,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('welcome');
-});
+});*/
 
-Route::get('/hello', function (){
-    return view('hello');
-});
 
-Route::get('/main', function (){
+Route::get('/', function (){
     return view('main');
 });
 
 Route::get('/customer', [CustomerController::class, 'index']);
 
-Route::get('/order', [OrderController::class, 'index']);
+Route::post('/order', [OrderController::class, 'index']);
 Route::post('/order/submit', [OrderController::class, 'submit']);
 
 
