@@ -26,13 +26,16 @@ Route::get('/', function (){
 
 Route::get('/customer', [CustomerController::class, 'index']);
 
-Route::post('/order', [OrderController::class, 'index']);
+Route::get('/order', [OrderController::class, 'index']);
+
 Route::post('/order/submit', [OrderController::class, 'submit']);
 
 
 Route::get('/taxidriver', function (){
     return view('taxidriver');
 })->name('taxidriver');
+
+Route::get('/register', [CustomerController::class, 'create']);
 
 /*Route::post('/order', function (){
     return view('order');
