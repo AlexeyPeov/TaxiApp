@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
+
     const STATE_NEW = 1;
     const STATE_ACCEPTED = 2;
     const STATE_IN_PROGRESS = 3;
@@ -28,7 +29,7 @@ class Order extends Model
         'pointB',
         'reviewGiven',
         'customerId',
-        // add other fillable attributes here
+        'taxiDriverId',
     ];
 
     public function isReviewGiven(): bool
@@ -168,10 +169,40 @@ class Order extends Model
         } elseif ($class == Car::SECOND) {
             $price = $priceDefault * 2;
         } elseif ($class == Car::THIRD) {
-            $price= $priceDefault;
+            $price = $priceDefault;
         }
 
         return $price - ($price * ($personalDiscount / 100)); //цена со скидкой;
+    }
+
+    public function statusToString(): string
+    {
+        $string = "";
+        if($this->getOrderStatus() == self::STATE_FAILED) {
+            $string = "Failed";
+        } elseif ($this->getOrderStatus() == self::STATE_NEW){
+            $string = "New";
+        } elseif ($this->getOrderStatus() == self::STATE_ACCEPTED){
+            $string = "Accepted";
+        } elseif ($this->getOrderStatus() == self::STATE_IN_PROGRESS){
+            $string = "In progress";
+        } elseif ($this->getOrderStatus() == self::STATE_COMPLETE){
+            $string = "Complete";
+        }
+        return $string;
+    }
+
+    public function classToString(): string
+    {
+        $string = "";
+        if($this->getCarClass() == 1) {
+            $string = "First";
+        } elseif ($this->getCarClass()  == 2){
+            $string = "Second";
+        } elseif ($this->getCarClass()  == 3){
+            $string = "Third";
+        }
+        return $string;
     }
 
 }

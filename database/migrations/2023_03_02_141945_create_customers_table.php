@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('personalDiscount')->nullable();
             $table->integer('orderCount');
             $table->integer('orderDeclinedCount');
+            $table->string('user_type')->default('Customer');
             $table->timestamps();
         });
     }

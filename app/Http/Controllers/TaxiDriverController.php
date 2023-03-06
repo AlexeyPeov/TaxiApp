@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Car;
+use App\Models\Order;
 use App\Models\TaxiDriver;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -59,9 +60,17 @@ class TaxiDriverController extends Controller
             abort(403, 'Unauthorized Action');
         } else {
             $taxiDriver = TaxiDriver::find(auth()->id())->getAttributes();
-            //dd($taxiDriver);
+            $car = Car::find($taxiDriver['carDriving']);
+            $orders = Order::where('class', $car->carClass)->where('orderStatus', Order::STATE_NEW)->get();
+            $hisOrders = Order::where('taxiDriverId', $taxiDriver['id'])
+                ->whereIn('orderStatus', [Order::STATE_ACCEPTED, Order::STATE_IN_PROGRESS])
+                ->get();
+
             return view('taxidrivers.show', [
-                'taxiDriver' => $taxiDriver
+                'taxiDriver' => $taxiDriver,
+                'orders' => $orders,
+                'hisOrders' => $hisOrders,
+                'car' => $car,
             ]);
         }
 

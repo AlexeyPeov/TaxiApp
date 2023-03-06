@@ -36,6 +36,7 @@ return new class extends Migration
             reviewsGiven INT,
             PRIMARY KEY (id),
             FOREIGN KEY(carDriving) REFERENCES car(id)*/
+            $table->string('user_type')->default('TaxiDriver');
             $table->timestamps();
             $table->foreignId('carDriving')->nullable()->constrained('cars')->onUpdate('cascade')->onDelete('cascade');
         });

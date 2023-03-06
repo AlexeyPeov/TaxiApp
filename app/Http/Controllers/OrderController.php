@@ -18,7 +18,12 @@ class OrderController extends Controller
         $phone = session('phoneNum');
         $customer = Customer::where('phoneNumber', $phone)->first();
         $orders = Order::where('customerId', $customer->id)
-            ->where('orderStatus', '!=',  0)-> where('orderStatus', '!=', 4)
+            ->whereIn('orderStatus',
+                [
+                Order::STATE_NEW,
+                Order::STATE_ACCEPTED,
+                Order::STATE_IN_PROGRESS,
+                ])
             ->get();
 
         $taxiDriver = null;
@@ -81,6 +86,25 @@ class OrderController extends Controller
         );
         session(['phoneNum' => $phone, 'firstName' => $name]);
         return redirect('/order');
+    }
+
+    public function update (Request $request){
+        $order = Order::findOrFail($request->input('orderId'));
+        if($request->input('action') == 'Take'){
+            $taxiDriverId = $request->input('taxiDriverId');
+            $order->fill(['orderStatus' => Order::STATE_ACCEPTED, 'taxiDriverId' => $taxiDriverId]);
+            $order->save();
+        } elseif ($request->input('action') == 'Decline'){
+            $order->fill(['orderStatus' => Order::STATE_NEW, 'taxiDriverId' => null]);
+            $order->save();
+        } elseif ($request->input('action') == 'Start'){
+            $order->fill(['orderStatus' => Order::STATE_IN_PROGRESS]);
+            $order->save();
+        }elseif ($request->input('action') == 'Finish'){
+            $order->fill(['orderStatus' => Order::STATE_COMPLETE]);
+            $order->save();
+        }
+        return redirect()->back();
     }
 
 }

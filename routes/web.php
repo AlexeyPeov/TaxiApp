@@ -31,16 +31,18 @@ Route::get('/order', [OrderController::class, 'index']);
 
 Route::post('/order/submit', [OrderController::class, 'submit']);
 
+Route::post('/order/update', [OrderController::class, 'update']);
 
-Route::get('/taxidriver', [TaxiDriverController::class, 'index']);
+
+Route::get('/taxidriver', [TaxiDriverController::class, 'index'])->middleware('guest');
 
 Route::get('taxidriver/accounts/{id}', [TaxiDriverController::class, 'show'])->name('taxidriver.show')->middleware('auth');
 
 // Show Register/Create Form
-Route::get('/taxidriver/signup', [TaxiDriverController::class, 'create']);//->middleware('guest');
+Route::get('/taxidriver/signup', [TaxiDriverController::class, 'create'])->middleware('guest');
 
 // Show Login Form
-Route::get('/taxidriver/login', [TaxiDriverController::class, 'login']);//->name('login')->middleware('guest');
+Route::get('/taxidriver/login', [TaxiDriverController::class, 'login'])->middleware('guest');
 
 // Create New User
 Route::post('/taxidriver/new', [TaxiDriverController::class, 'store']);

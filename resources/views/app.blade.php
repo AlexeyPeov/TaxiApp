@@ -6,12 +6,6 @@
     <link rel="stylesheet" href="https://unpkg.com/simpledotcss/simple.min.css">
     {{--<link rel="stylesheet" href="{{ asset('css/.css') }}">--}}
     <style>
-        .center {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
         .btn {
             padding: 15px 32px;
             font-size: 16px;
@@ -66,9 +60,11 @@
         .mt-1 {
             margin-top: 0.25rem;
         }
+
     </style>
 </head>
 <body>
+@yield('header')
 {{--<header>
     <nav>
         <a href="/sign-in">Sign In</a>
