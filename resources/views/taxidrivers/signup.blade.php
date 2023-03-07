@@ -101,7 +101,8 @@
             </p>
         </fieldset>
     </form>
-
+    <script src="../../../public/js/parsePhoneNumber.js"></script>
+{{--
 
     <script>
          document.getElementById("register").addEventListener("submit", function(event) {
@@ -117,6 +118,6 @@
              // Update the value of the input element with the formatted phone number
              document.getElementById("phoneNumber").value = phoneNumber;
          });
-    </script>
+    </script>--}}
 
 @endsection

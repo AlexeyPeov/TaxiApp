@@ -3,10 +3,10 @@
 @section ('content')
     <div class="form-container" style="display: flex;">
         <form action="/order/submit" method="POST">
+            <b style="font-size: 40px;"> Create order</b> <br> <br> <br>
             @csrf
-
-            <label for="phone">Phone Number:</label><br>
-            <input type="text" id="phone" name="phone" required><br>
+            <label for="phoneNumber">Phone Number:</label><br>
+            <input type="text" id="phoneNumber" name="phoneNumber" required><br>
 
             <label for="name">Name:</label><br>
             <input type="text" id="firstName" name="name" required><br>
@@ -16,7 +16,7 @@
                 <input type="radio" id="class1" name="carClass" value= "1" required>
                 <label for="class1">1st</label>
 
-                <input type="radio" id="class2" name="carClass" value= "2">
+                <input type="radio" id="class2" name="carClass" value= "2" checked>
                 <label for="class2">2nd</label>
 
                 <input type="radio" id = "class3" name ="carClass" value = "3">
@@ -33,4 +33,5 @@
             <input type="submit" value="Order">
         </form>
     </div>
+    <script src="../../../public/js/parsePhoneNumber.js"></script>
 @endsection

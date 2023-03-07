@@ -30,22 +30,21 @@
     </header>
     <div>
         <div class="rating">
-            <p>Rating: {{$taxiDriver['rating']}}</p>
-            <div class="rating">
-                @if($taxiDriver['rating'] == null || $taxiDriver['reviewsGiven'] < 10)
-                    <p>Calibrating..({{$taxiDriver['reviewsGiven']}}/10)</p>
-                @else
-                    @for ($i = 1; $i <= 5; $i++)
-                        @if ($taxiDriver['rating'] >= $i)
-                            <span>★</span>
-                        @elseif ($taxiDriver['rating'] > $i - 1)
-                            <span>⯫</span>
-                        @else
-                            <span>☆</span>
-                        @endif
-                    @endfor
-                @endif
-            </div>
+            {{--Display rating if has one--}}
+            @if($taxiDriver['rating'] != null)
+                <p>Rating : {{$taxiDriver['rating']}}</p>
+                @for ($i = 1; $i <= 5; $i++)
+                    @if ($taxiDriver['rating'] >= $i)
+                        <span>★</span>
+                    @elseif ($taxiDriver['rating'] > $i - 1)
+                        <span>⯫</span>
+                    @else
+                        <span>☆</span>
+                    @endif
+                @endfor
+            @else
+                <p>Rating : {{$taxiDriver['reviewsGiven']}}/10 reviews given</p>
+            @endif
         </div>
 
         @unless($taxiDriver == null)

@@ -3,23 +3,22 @@
 @section('content')
 
     @unless($customer == null)
-
         @foreach($orders as $order)
             <div class="sticker">
-                {{--<p>Order ID: {{ $order->id }}</p>--}}
                 <p>Order Price: {{ $order->price }}</p>
                 <p>Point A: {{ $order->pointA }}</p>
-                <p>Point B: {{ $order->PointB }}</p>
+                <p>Point B: {{ $order->pointB }}</p>
                 <p>Class: {{ $order->classToString()}}</p>
                 <p>Order status: {{ $order->statusToString() }}</p>
-                {{--<p>Order Date: {{ $order->created_at }}</p>--}}
                 @unless ($order['TaxiDriver'] == null)
                     <p>TaxiDriver: {{ $order['TaxiDriver']->firstName}}</p>
-                    <p>TaxiDriver Rating: {{ $order['TaxiDriver']->rating}}</p>
+                    @if($order['TaxiDriver']->rating != null)
+                        <p>TaxiDriver Rating: {{ $order['TaxiDriver']->rating}}</p>
+                    @endif
                     <p>Car Color: {{ $order['Car']->color}}</p>
                     <p>Car Brand: {{ $order['Car']->brand}}</p>
                 @endunless
-                @if($order->orderStatus == 2)
+                @if($order->orderStatus == 2 || $order->orderStatus == 1)
                     <form action="/order/update" method="POST">
                         @csrf
                         <input name="orderId" id="orderId" type="hidden" value="{{$order->id}}">
@@ -58,12 +57,10 @@
                                 }
                             });
                         }
-
                     </script>
                 @endif
             </div>
         @endforeach
-
 
     @else
         <p>No Current Orders</p>

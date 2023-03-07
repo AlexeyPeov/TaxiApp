@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Site</title>
+    <title>Taxi</title>
 
     <link rel="stylesheet" href="https://unpkg.com/simpledotcss/simple.min.css">
-    {{--<link rel="stylesheet" href="{{ asset('css/.css') }}">--}}
     <style>
         .btn {
             padding: 15px 32px;
@@ -65,12 +64,6 @@
 </head>
 <body>
 @yield('header')
-{{--<header>
-    <nav>
-        <a href="/sign-in">Sign In</a>
-    </nav>
-</header>--}}
-
 <main>
     @yield('content')
 </main>

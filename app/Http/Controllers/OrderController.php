@@ -47,25 +47,28 @@ class OrderController extends Controller
     {
         $from = $request->input('from');
         $to = $request->input('to');
-        $phone = $request->input('phone');
+        $phoneNumber = $request->input('phoneNumber');
         $class = $request->input('carClass');
         $name = $request->input('name');
-
-        $customer = Customer::where('phoneNumber', $phone)->first();
+        $customer = Customer::where('phoneNumber', $phoneNumber)->first();
         //проверить был ли клиент уже
         //$customer = $this->customerRepository->findByPhoneNum($phoneNum);
 
 
         // если нет - создать, и закинуть в датабазу
-        if ($customer == null) {
-            $customer = Customer::create([
+        if ($customer == null)
+        {
+            $customer = Customer::create
+            ([
                 'firstName' => $name,
-                'phoneNumber' => $phone,
+                'phoneNumber' => $phoneNumber,
                 'orderCount' => 1,
                 'personalDiscount' => 0,
                 'orderDeclinedCount' => 0,
             ]);
-        } else {
+        }
+        else
+        {
             $customer->updateOrderCount();
             $customer->save();
         }
@@ -81,30 +84,28 @@ class OrderController extends Controller
                 'customerId' => $customer->id,
             ],
         );
-        session(['phoneNum' => $phone, 'firstName' => $name]);
+        session(['phoneNum' => $phoneNumber, 'firstName' => $name]);
         return redirect('/order');
     }
 
     public function update(Request $request)
     {
+        //find order
         $order = Order::findOrFail($request->input('orderId'));
-
         //find taxiDriver
-        $taxiDriver = null;
         $taxiDriver = TaxiDriver::find($request->input('taxiDriverId'));
         if ($taxiDriver == null) {
-            $taxiDriver = TaxiDriver::findOrFail($order->taxiDriverId);
+            $taxiDriver = TaxiDriver::find($order->taxiDriverId);
         }
 
-
         if ($request->input('action') == 'Take') {
-            $order->fill(['orderStatus' => Order::STATE_ACCEPTED, 'taxiDriverId' => $taxiDriver->id]);
+            $order->accepted($taxiDriver->id);
             $order->save();
         } elseif ($request->input('action') == 'Decline') {
             if ($request->input('taxiDriverId') == null) {
-                $order->fill(['orderStatus' => Order::STATE_FAILED]);
+                $order->failed();
                 $customer = Customer::find($order->customerId);
-                $customer['orderDeclinedCount'] = +1;
+                $customer->declinedOrder();
                 $customer->save();
             } else {
                 $order->fill(['orderStatus' => Order::STATE_NEW, 'taxiDriverId' => null]);
@@ -123,10 +124,10 @@ class OrderController extends Controller
             $order->save();
             $taxiDriver->save();
         } elseif ($request->input('action') == 'Start') {
-            $order->fill(['orderStatus' => Order::STATE_IN_PROGRESS]);
+            $order->inProgress();
             $order->save();
         } elseif ($request->input('action') == 'Finish') {
-            $order->fill(['orderStatus' => Order::STATE_COMPLETE]);
+            $order->complete();
             $order->save();
         }
         return redirect()->back();

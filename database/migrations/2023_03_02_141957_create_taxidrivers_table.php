@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('qualification', 20)->nullable();
 //            $table->integer('carDriving')->nullable();
             $table->integer('reviewHeap')->nullable();
-            $table->integer('reviewsGiven')->nullable();
+            $table->integer('reviewsGiven')->nullable()->default(0);
             /*id SERIAL,
             firstName CHAR(50) NOT NULL,
             secondName CHAR(50) NOT NULL,

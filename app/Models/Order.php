@@ -129,7 +129,11 @@ class Order extends Model
 
     public function failed(): void
     {
-        $this->orderStatus = self::STATE_FAILED;
+        if($this->orderStatus == self::STATE_NEW || $this->orderStatus == self::STATE_ACCEPTED){
+            $this->orderStatus = self::STATE_FAILED;
+        } else {
+            echo "can't decline!";
+        }
     }
 
     public function stateNew(): void
@@ -137,19 +141,28 @@ class Order extends Model
         $this->orderStatus = self::STATE_NEW;
     }
 
-    public function accepted(): void
+    public function accepted(int $taxiDriverId): void
     {
-        $this->orderStatus = self::STATE_ACCEPTED;
+        if($this->orderStatus != self::STATE_FAILED) {
+            $this->orderStatus = self::STATE_ACCEPTED;
+            $this->taxiDriverId = $taxiDriverId;
+        } else {
+            echo "Order expired!";
+        }
     }
 
     public function inProgress(): void
     {
-        $this->orderStatus = self::STATE_IN_PROGRESS;
+        if($this->orderStatus != self::STATE_FAILED){
+            $this->orderStatus = self::STATE_IN_PROGRESS;
+        }
     }
 
     public function complete(): void
     {
-        $this->orderStatus = self::STATE_COMPLETE;
+        if($this->orderStatus != self::STATE_FAILED){
+            $this->orderStatus = self::STATE_COMPLETE;
+        }
     }
 
     public function giveReview(): void
