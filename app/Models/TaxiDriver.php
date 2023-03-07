@@ -119,15 +119,15 @@ class TaxiDriver extends Authenticatable
 
     public function reviewIsGiven(): void
     {
-        $this->reviewsGiven = +1;
+        $this->reviewsGiven += 1;
     }
 
     public function addReviewToHeap(int $review): void
     {
-        $this->reviewHeap = +$review;
+        $this->reviewHeap += $review;
     }
 
-    public function displayRating(): void
+    public function reevaluateRating(): void
     {
         if ($this->reviewsGiven > 9) {
             $this->rating = $this->reviewHeap / $this->reviewsGiven;

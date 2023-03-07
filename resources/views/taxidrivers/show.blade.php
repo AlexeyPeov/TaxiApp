@@ -21,6 +21,13 @@
     </style>
 @endsection
 @section('content')
+    <header>
+        <form action="../logout" method="POST">
+            @csrf
+            {{--<input name="orderId" id="orderId" type="hidden" value="{{$order->id}}">--}}
+            <input name="action" class = "Decline" id="LogOut" type="submit" value="LogOut">
+        </form>
+    </header>
     <div>
         <div class="rating">
             <p>Rating: {{$taxiDriver['rating']}}</p>
@@ -62,6 +69,7 @@
                             <form action="/order/update" method="POST">
                                 @csrf
                                 <input name="orderId" id="orderId" type="hidden" value="{{$order->id}}">
+                                {{--<input name="taxiDriverId" id="taxiDriverId" type="hidden" value="{{$order->taxiDriverId}}">--}}
                                 <input name="action" class = "Start" id="Start" type="submit" value="Start">
                                 <input name="action" class = "Decline" id="Decline" type="submit" value="Decline">
                             </form>

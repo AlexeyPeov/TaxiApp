@@ -30,7 +30,7 @@ class TaxiDriverController extends Controller
             'firstName' => ['required', 'min:3'],
             'secondName' => ['required', 'min:3'],
             'birthday' => ['required', 'date', 'before:' . Carbon::now()->subYears(18)->toDateString()],
-            'phoneNumber' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'phoneNumber' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:19',
             'password' => 'required|confirmed|min:6',
 
         ]);
@@ -92,19 +92,11 @@ class TaxiDriverController extends Controller
 
         return back()->withErrors(['phoneNumber' => 'Invalid Credentials'])->onlyInput('phoneNumber');
     }
-   /*
-
-
-    // Logout User
     public function logout(Request $request) {
         auth()->logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
-        return redirect('/taxidriver')->with('message', 'You have been logged out!');
+        return redirect('taxidriver')->with('message', 'You have been logged out!');
 
     }
-
-   */
 }

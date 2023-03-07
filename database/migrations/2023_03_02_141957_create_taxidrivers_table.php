@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('taxi_drivers', function (Blueprint $table) {
             $table->id();
-            $table->string('phoneNumber',12);
+            $table->string('phoneNumber',20);
             $table->string('password');
             $table->string('firstName',50);
             $table->string('secondName',50);

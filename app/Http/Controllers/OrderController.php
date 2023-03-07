@@ -13,37 +13,34 @@ use Illuminate\Routing\Redirector;
 
 class OrderController extends Controller
 {
-
-    public function index (){
+    public function index()
+    {
         $phone = session('phoneNum');
         $customer = Customer::where('phoneNumber', $phone)->first();
         $orders = Order::where('customerId', $customer->id)
             ->whereIn('orderStatus',
                 [
-                Order::STATE_NEW,
-                Order::STATE_ACCEPTED,
-                Order::STATE_IN_PROGRESS,
+                    Order::STATE_NEW,
+                    Order::STATE_ACCEPTED,
+                    Order::STATE_IN_PROGRESS,
+                    Order::STATE_COMPLETE,
                 ])
+            ->where('reviewGiven', false)
             ->get();
-
-        $taxiDriver = null;
-        $car = null;
         foreach ($orders as $order) {
-            if($order->taxiDriverId != null){
-                $taxiDriver = TaxiDriver::where('id', $order->taxiDriverId);
+            if ($order->taxiDriverId != null) {
+                $order['TaxiDriver'] = TaxiDriver::where('id', $order->taxiDriverId)->first();
+                /*$driver = TaxiDriver::where('id', $order->taxiDriverId)->first();
+                $taxiDrivers[] = $driver;*/
+                if ($order['TaxiDriver'] != null) {
+                    $order['Car'] = Car::where('id', $order['TaxiDriver']->carDriving)->first();
+                }
             }
-            //var_dump($order->taxiDriverId);
         }
-        if($taxiDriver != null){
-            $car = Car::where('taxiDriverId', $taxiDriver->id);
-        }
-
 
         return view('orders.index')
             ->with('customer', $customer)
-            ->with('orders', $orders)
-            ->with('taxiDriver', $taxiDriver)
-            ->with('car', $car);
+            ->with('orders', $orders);
     }
 
     public function submit(Request $request)
@@ -88,19 +85,47 @@ class OrderController extends Controller
         return redirect('/order');
     }
 
-    public function update (Request $request){
+    public function update(Request $request)
+    {
         $order = Order::findOrFail($request->input('orderId'));
-        if($request->input('action') == 'Take'){
-            $taxiDriverId = $request->input('taxiDriverId');
-            $order->fill(['orderStatus' => Order::STATE_ACCEPTED, 'taxiDriverId' => $taxiDriverId]);
+
+        //find taxiDriver
+        $taxiDriver = null;
+        $taxiDriver = TaxiDriver::find($request->input('taxiDriverId'));
+        if ($taxiDriver == null) {
+            $taxiDriver = TaxiDriver::findOrFail($order->taxiDriverId);
+        }
+
+
+        if ($request->input('action') == 'Take') {
+            $order->fill(['orderStatus' => Order::STATE_ACCEPTED, 'taxiDriverId' => $taxiDriver->id]);
             $order->save();
-        } elseif ($request->input('action') == 'Decline'){
-            $order->fill(['orderStatus' => Order::STATE_NEW, 'taxiDriverId' => null]);
+        } elseif ($request->input('action') == 'Decline') {
+            if ($request->input('taxiDriverId') == null) {
+                $order->fill(['orderStatus' => Order::STATE_FAILED]);
+                $customer = Customer::find($order->customerId);
+                $customer['orderDeclinedCount'] = +1;
+                $customer->save();
+            } else {
+                $order->fill(['orderStatus' => Order::STATE_NEW, 'taxiDriverId' => null]);
+            }
             $order->save();
-        } elseif ($request->input('action') == 'Start'){
+        } elseif ($request->input('action') == 'Leave Review') {
+            $review = $request->input('rating');
+            //if user hasnt selected value in view, default is set, which is 5;
+            if ($review == null) {
+                $review = 5;
+            }
+            $order->fill(['reviewGiven' => true]);
+            $taxiDriver->reviewIsGiven();
+            $taxiDriver->addReviewToHeap($review);
+            $taxiDriver->reevaluateRating();
+            $order->save();
+            $taxiDriver->save();
+        } elseif ($request->input('action') == 'Start') {
             $order->fill(['orderStatus' => Order::STATE_IN_PROGRESS]);
             $order->save();
-        }elseif ($request->input('action') == 'Finish'){
+        } elseif ($request->input('action') == 'Finish') {
             $order->fill(['orderStatus' => Order::STATE_COMPLETE]);
             $order->save();
         }

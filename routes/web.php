@@ -50,6 +50,7 @@ Route::post('/taxidriver/new', [TaxiDriverController::class, 'store']);
 // Log In User
 Route::post('/taxidriver/authenticate', [TaxiDriverController::class, 'authenticate']);
 
+Route::post('/taxidriver/logout', [TaxiDriverController::class, 'logout'])->middleware('auth');
 /*
 // Create New User
 Route::get('/taxidriver', [TaxiDriverController::class, 'store']);

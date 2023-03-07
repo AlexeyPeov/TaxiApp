@@ -6,8 +6,7 @@
     }
 </style>
 @section('content')
-
-    <form method="POST" action="/taxidriver/new">
+    <form id = "register" method="POST" action="/taxidriver/new">
         @csrf
         <div class="form-container" style="display: flex;">
             <fieldset>
@@ -25,8 +24,7 @@
                 @enderror
 
                 <label for="phoneNumber">Phone Number</label><br>
-                <input type="text" name="phoneNumber" value="{{old('phoneNumber')}}"/>
-
+                <input type="text" name="phoneNumber" id = "phoneNumber" value="{{old('phoneNumber')}}"/>
                 @error('phoneNumber')
                 <p class="text-red-500 text-xs mt-1">{{$message}}</p>
                 @enderror
@@ -103,5 +101,22 @@
             </p>
         </fieldset>
     </form>
+
+
+    <script>
+         document.getElementById("register").addEventListener("submit", function(event) {
+             // Get the phone number entered by the user
+             let phoneNumber = document.getElementById("phoneNumber").value;
+
+             // Remove all non-digit characters from the phone number
+             phoneNumber = phoneNumber.replace(/\D/g, "");
+
+             // Format the phone number according to your desired format
+             phoneNumber = "+ " + phoneNumber.slice(0, 1) + " (" + phoneNumber.slice(1, 4) + ") " + phoneNumber.slice(4, 6) + " " + phoneNumber.slice(6, 8) + " " + phoneNumber.slice(8);
+
+             // Update the value of the input element with the formatted phone number
+             document.getElementById("phoneNumber").value = phoneNumber;
+         });
+    </script>
 
 @endsection
